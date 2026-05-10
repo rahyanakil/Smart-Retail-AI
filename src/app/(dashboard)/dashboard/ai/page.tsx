@@ -670,12 +670,9 @@ function RateLimitBanner({ onRetry }: { onRetry: () => void }) {
 export default function AiInsightsDashboardPage() {
   const qc = useQueryClient();
 
-<<<<<<< HEAD
-  // staleTime + gcTime both 60 min:
-  //  - staleTime: data considered fresh for 60 min → no background refetch on navigate/focus
-  //  - gcTime:    keep in QueryClient memory for 60 min → hot-reload / remount never re-fetches
-  //  - refetchOnMount: false → don't even check staleness when component mounts; use what's cached
-  //  - retry: false → 429s from Gemini must not be retried (global queryClient also blocks 429 retries)
+  // staleTime + gcTime both 60 min — data stays fresh in memory across hot-reloads.
+  // refetchOnMount: false — never re-fetches on navigate back if data already exists.
+  // retry: false — 429s from Gemini must not be retried automatically.
   const AI_QUERY_OPTS = {
     staleTime: 1000 * 60 * 60,
     gcTime:    1000 * 60 * 60,
@@ -702,38 +699,6 @@ export default function AiInsightsDashboardPage() {
       queryKey: ['ai-restock'],
       queryFn: async () => { const r = await aiApi.restock(); return r.data.data; },
       ...AI_QUERY_OPTS,
-=======
-  const { data: insights, isLoading: insightsLoading, error: insightsErr, isError: insightsIsError } =
-    useQuery<BusinessInsights>({
-      queryKey: ['ai-insights'],
-      queryFn: async () => { const r = await aiApi.insights(); return r.data.data; },
-      staleTime: 1000 * 60 * 60,
-      retry: false,
-    });
-
-  const { data: forecast, isLoading: forecastLoading, error: forecastErr, isError: forecastIsError } =
-    useQuery<SalesForecast>({
-      queryKey: ['ai-forecast'],
-      queryFn: async () => {
-        await new Promise(r => setTimeout(r, 1000));
-        const res = await aiApi.forecast();
-        return res.data.data;
-      },
-      staleTime: 1000 * 60 * 60,
-      retry: false,
-    });
-
-  const { data: restock, isLoading: restockLoading, error: restockErr, isError: restockIsError } =
-    useQuery<RestockRecommendations>({
-      queryKey: ['ai-restock'],
-      queryFn: async () => {
-        await new Promise(r => setTimeout(r, 2000));
-        const res = await aiApi.restock();
-        return res.data.data;
-      },
-      staleTime: 1000 * 60 * 60,
-      retry: false,
->>>>>>> 00bb9b3f0137eb6b246f4d9514e728d0f30c38ef
     });
 
   const anyLoading = insightsLoading || forecastLoading || restockLoading;
@@ -842,12 +807,9 @@ export default function AiInsightsDashboardPage() {
           </Button>
         </div>
       </motion.div>
-<<<<<<< HEAD
 
       {/* ── Rate-limit banner ───────────────────────────────────────────────── */}
       {isRateLimited && <RateLimitBanner onRetry={refreshAll} />}
-=======
->>>>>>> 00bb9b3f0137eb6b246f4d9514e728d0f30c38ef
 
       {/* ── Quick KPIs ──────────────────────────────────────────────────────── */}
       {anyLoading ? (

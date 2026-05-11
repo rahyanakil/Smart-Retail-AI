@@ -8,7 +8,7 @@ import type { ChatMessage } from '@/types';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000').replace(/\/$/, '');
 const STORAGE_KEY = 'smartretail-copilot-history';
 const MAX_HISTORY = 40;
 
